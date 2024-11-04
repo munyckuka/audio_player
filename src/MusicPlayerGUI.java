@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Hashtable;
 
 public class MusicPlayerGUI extends JFrame {
 
@@ -17,6 +18,7 @@ public class MusicPlayerGUI extends JFrame {
 
     private JLabel songTitle, songArtist;
     private JPanel playbackBtns;
+    private JSlider playbackSlider;
 
     public MusicPlayerGUI(){
         super("Music Player");
@@ -59,12 +61,14 @@ public class MusicPlayerGUI extends JFrame {
         songArtist.setHorizontalAlignment(SwingConstants.CENTER);
         add(songArtist);
 
-        JSlider playbackSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 0  );
+        playbackSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 0  );
         playbackSlider.setBounds(getWidth()/2 - 300/2, 365, 300, 40);
         playbackSlider.setBackground(null);
         add(playbackSlider);
 
         addPlaybackBtns();
+
+
     }
 
 //  toolbar with music loader and playlist
@@ -93,6 +97,7 @@ public class MusicPlayerGUI extends JFrame {
                     updateSongTitleAndArtist(song); // then change name
 
                     enablePauseButtonDissablePlayButton(); // switch play button to pause
+                    updatePlaybackSlider(song);
                 }
             }
         });
@@ -177,6 +182,33 @@ public class MusicPlayerGUI extends JFrame {
 
         pauseButton.setVisible(false);
         pauseButton.setEnabled(false);
+    }
+
+//    adding under slider timing (00:00)
+    private void updatePlaybackSlider(Song song){
+        playbackSlider.setMaximum(song.getMp3File().getFrameCount());
+
+        Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
+
+        JLabel labelBeggining = new JLabel("00:00");
+        labelBeggining.setFont(new Font("Dialog", Font.BOLD, 10));
+        labelBeggining.setForeground(TEXT_COLOR);
+
+        JLabel labelEnd = new JLabel(song.getSongLength());
+        labelEnd.setFont(new Font("Dialog", Font.BOLD, 10));
+        labelEnd.setForeground(TEXT_COLOR);
+
+        labelTable.put(0, labelBeggining);
+        labelTable.put(song.getMp3File().getFrameCount(), labelEnd);
+
+        playbackSlider.setLabelTable(labelTable);
+        playbackSlider.setPaintLabels(true);
+
+    }
+
+//   updating slider pointer ---▲--
+    private void setPlaybackSliderValue(int frame){
+        playbackSlider.setValue(frame);
     }
 
 //    load image from path

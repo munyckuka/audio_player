@@ -5,6 +5,7 @@ import javazoom.jl.player.advanced.PlaybackListener;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.rmi.server.ExportException;
 
 public class MusicPlayer extends PlaybackListener {
     private Song currentSong;
@@ -12,11 +13,11 @@ public class MusicPlayer extends PlaybackListener {
     private AdvancedPlayer advancedPlayer;
     private boolean isPaused;
     private int currentFrame; //time when music is stopped
-
     public MusicPlayer(){
 
     }
-//  load song and insta play it
+
+    //  load song and insta play it
     public void loadSong(Song song){
         currentSong = song;
         if(currentSong != null){
@@ -40,7 +41,7 @@ public class MusicPlayer extends PlaybackListener {
     }
 
 //   creating player to play music
-    public void playCurrentSong(){
+    public void playCurrentSong() {
         if(currentSong == null) return; //prevent bug. if no song is loaded exception accures
         try {
             FileInputStream fileInputStream = new FileInputStream(currentSong.getFilePath());
@@ -75,6 +76,15 @@ public class MusicPlayer extends PlaybackListener {
         }).start();
     }
 
+    private void startPlaybackSliderTread(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while ()
+            }
+        }).start();
+    }
+
     @Override
     public void playbackStarted(PlaybackEvent evt) {
         System.out.println("Starting music player");
@@ -86,4 +96,6 @@ public class MusicPlayer extends PlaybackListener {
 
         currentFrame += (int) ((double) evt.getFrame() * currentSong.getFrameRatePerMillisecond()); //calculating current frame
     }
+
+
 }
