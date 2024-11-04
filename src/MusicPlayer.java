@@ -80,7 +80,9 @@ public class MusicPlayer extends PlaybackListener {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while ()
+                while (!isPaused){
+
+                }
             }
         }).start();
     }

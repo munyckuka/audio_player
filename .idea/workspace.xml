@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6d730001-dcca-4337-9f85-da54ff71ab2f" name="Changes" comment="(assignment 5)&#10;- basic gui done (needs changes)&#10;- loading mp3 files (add adapter)&#10;- play/pause/resume realised">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MusicPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MusicPlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MusicPlayerGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MusicPlayerGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Song.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Song.java" afterDir="false" />
-    </list>
+    <list default="true" id="6d730001-dcca-4337-9f85-da54ff71ab2f" name="Changes" comment="(assignment 5)&#10;- song length is used&#10;- added timing text under slider" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -102,7 +97,7 @@
       <workItem from="1730271642897" duration="6548000" />
       <workItem from="1730714206189" duration="19000" />
       <workItem from="1730744371641" duration="164000" />
-      <workItem from="1730744545792" duration="1960000" />
+      <workItem from="1730744545792" duration="2279000" />
     </task>
     <task id="LOCAL-00001" summary="(assignment 5)&#10;- basic gui done (needs changes)&#10;- loading mp3 files (add adapter)&#10;- play/pause/resume realised">
       <option name="closed" value="true" />
@@ -112,7 +107,15 @@
       <option name="project" value="LOCAL" />
       <updated>1730281380533</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="(assignment 5)&#10;- song length is used&#10;- added timing text under slider">
+      <option name="closed" value="true" />
+      <created>1730746819186</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1730746819186</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -120,14 +123,15 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="(assignment 5)&#10;- basic gui done (needs changes)&#10;- loading mp3 files (add adapter)&#10;- play/pause/resume realised" />
-    <option name="LAST_COMMIT_MESSAGE" value="(assignment 5)&#10;- basic gui done (needs changes)&#10;- loading mp3 files (add adapter)&#10;- play/pause/resume realised" />
+    <MESSAGE value="(assignment 5)&#10;- song length is used&#10;- added timing text under slider" />
+    <option name="LAST_COMMIT_MESSAGE" value="(assignment 5)&#10;- song length is used&#10;- added timing text under slider" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/MusicPlayer.java</url>
-          <line>20</line>
+          <line>21</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
