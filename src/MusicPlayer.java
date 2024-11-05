@@ -2,19 +2,63 @@ import javazoom.jl.player.advanced.AdvancedPlayer;
 import javazoom.jl.player.advanced.PlaybackEvent;
 import javazoom.jl.player.advanced.PlaybackListener;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.*;
 import java.rmi.server.ExportException;
+import java.util.ArrayList;
 
 public class MusicPlayer extends PlaybackListener {
+    private static final Object playSignal = new Object(); // to sync slider and music
+    private MusicPlayerGUI musicPlayerGUI;
     private Song currentSong;
-
+    private ArrayList<Song> playlist;
     private AdvancedPlayer advancedPlayer;
     private boolean isPaused;
     private int currentFrame; //time when music is stopped
-    public MusicPlayer(){
 
+
+    public void setCurrentFrame(int frame){
+        currentFrame = frame;
+    }
+
+    public void setCurrentTimeInMilli(int timeInMilli){
+        currentTimeInMilli = timeInMilli;
+    }
+    public Song getCurrentSong(){
+        return currentSong;
+    }
+    public void loadPlaylist(File playlistFile){
+        playlist = new ArrayList<>();
+        try {
+            FileReader fileReader = new FileReader(playlistFile);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+            String songPath;
+            while ((songPath = bufferedReader.readLine()) != null){
+                Song song = new Song(songPath);
+                playlist.add(song);
+            }
+
+            if (playlist.size()>0){
+                musicPlayerGUI.setPlaybackSliderValue(0);
+                currentTimeInMilli = 0;
+                currentSong = playlist.get(0);
+                currentFrame = 0;
+
+                musicPlayerGUI.enablePauseButtonDissablePlayButton();
+                musicPlayerGUI.updateSongTitleAndArtist(currentSong);
+                musicPlayerGUI.updatePlaybackSlider(currentSong);
+
+                playCurrentSong();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+    private int currentTimeInMilli;
+    public MusicPlayer(MusicPlayerGUI musicPlayerGUI){
+        this.musicPlayerGUI = musicPlayerGUI;
     }
 
     //  load song and insta play it
@@ -52,6 +96,8 @@ public class MusicPlayer extends PlaybackListener {
 
             startMusicThread();
 
+            startPlaybackSliderTread();
+
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -63,7 +109,11 @@ public class MusicPlayer extends PlaybackListener {
             public void run() {
                 try {
                     if(isPaused){
-//                        resume song
+                        synchronized (playSignal){
+                            isPaused = false;
+
+                            playSignal.notify();
+                        }
                         advancedPlayer.play(currentFrame, Integer.MAX_VALUE);
                     }else {
 //                        play from the beginning
@@ -80,8 +130,26 @@ public class MusicPlayer extends PlaybackListener {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                if (isPaused){
+                    try {
+                        synchronized (playSignal){
+                            playSignal.wait();
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
                 while (!isPaused){
+                    try {
+                        currentTimeInMilli++;
+//                        formula taken from stackoverflow
+                        int calculatedFrame = (int)((double)currentTimeInMilli *2.08* currentSong.getFrameRatePerMillisecond());
 
+                        musicPlayerGUI.setPlaybackSliderValue(calculatedFrame);
+                        Thread.sleep(1);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
             }
         }).start();

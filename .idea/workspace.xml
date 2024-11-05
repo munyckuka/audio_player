@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6d730001-dcca-4337-9f85-da54ff71ab2f" name="Changes" comment="(assignment 5)&#10;- song length is used&#10;- added timing text under slider" />
+    <list default="true" id="6d730001-dcca-4337-9f85-da54ff71ab2f" name="Changes" comment="(assignment 5)&#10;- song length is used&#10;- added timing text under slider">
+      <change afterPath="$PROJECT_DIR$/src/MusicPlayerDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MusicPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MusicPlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MusicPlayerGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MusicPlayerGUI.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -97,7 +102,8 @@
       <workItem from="1730271642897" duration="6548000" />
       <workItem from="1730714206189" duration="19000" />
       <workItem from="1730744371641" duration="164000" />
-      <workItem from="1730744545792" duration="2279000" />
+      <workItem from="1730744545792" duration="3437000" />
+      <workItem from="1730830457373" duration="3638000" />
     </task>
     <task id="LOCAL-00001" summary="(assignment 5)&#10;- basic gui done (needs changes)&#10;- loading mp3 files (add adapter)&#10;- play/pause/resume realised">
       <option name="closed" value="true" />
@@ -115,7 +121,15 @@
       <option name="project" value="LOCAL" />
       <updated>1730746819186</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="(assignment 5)&#10;- song length is used&#10;- added timing text under slider">
+      <option name="closed" value="true" />
+      <created>1730746876959</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1730746876959</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -131,7 +145,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/MusicPlayer.java</url>
-          <line>21</line>
+          <line>65</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>

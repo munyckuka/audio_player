@@ -2,8 +2,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Hashtable;
@@ -30,7 +29,7 @@ public class MusicPlayerGUI extends JFrame {
 
         setLayout(null);
 
-        musicPlayer = new MusicPlayer();
+        musicPlayer = new MusicPlayer(this);
         getContentPane().setBackground(FRAME_COLOR);
         jFileChooser = new JFileChooser();
         jFileChooser.setCurrentDirectory(new File("src/assets")); // NOTE! change later or make changeable
@@ -64,6 +63,28 @@ public class MusicPlayerGUI extends JFrame {
         playbackSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 0  );
         playbackSlider.setBounds(getWidth()/2 - 300/2, 365, 300, 40);
         playbackSlider.setBackground(null);
+        playbackSlider.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                musicPlayer.pauseSong();
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                JSlider source = (JSlider) e.getSource();
+
+                int frame = source.getValue();
+
+                musicPlayer.setCurrentFrame(frame);
+                musicPlayer.setCurrentTimeInMilli((int) (frame / (2.08 * musicPlayer.getCurrentSong().getFrameRatePerMillisecond())));
+
+                musicPlayer.playCurrentSong();
+
+                enablePauseButtonDissablePlayButton();
+            }
+
+        });
         add(playbackSlider);
 
         addPlaybackBtns();
@@ -106,8 +127,31 @@ public class MusicPlayerGUI extends JFrame {
         JMenu playlistMenu = new JMenu("Playlist");
         menuBar.add(playlistMenu);
         JMenuItem createPlaylist = new JMenuItem("Create Playlist");
+        createPlaylist.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new MusicPlayerDialog(MusicPlayerGUI.this).setVisible(true);
+            }
+        });
         playlistMenu.add(createPlaylist);
+
+
         JMenuItem loadPlaylist = new JMenuItem("Load Playlist");
+        loadPlaylist.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser jFileChooser = new JFileChooser();
+                jFileChooser.setFileFilter(new FileNameExtensionFilter("Playlist", "txt"));
+                jFileChooser.setCurrentDirectory(new File("src/assets"));
+                int result = jFileChooser.showOpenDialog(MusicPlayerGUI.this);
+                File selectedFile = jFileChooser.getSelectedFile();
+                if(result==JFileChooser.APPROVE_OPTION && selectedFile != null){
+                    musicPlayer.stopSong();
+                    musicPlayer.loadPlaylist(selectedFile);
+                }
+
+            }
+        });
         playlistMenu.add(loadPlaylist);
 
         add(toolBar);
@@ -157,13 +201,13 @@ public class MusicPlayerGUI extends JFrame {
     }
 
 //    updating text of gui to song's name
-    private void updateSongTitleAndArtist(Song song){
+    public void updateSongTitleAndArtist(Song song){
         songTitle.setText(song.getSongTitle());
         songArtist.setText(song.getSongArtist());
     }
 
 //    switch "Play" with "Pause"
-    private void enablePauseButtonDissablePlayButton(){
+    public void enablePauseButtonDissablePlayButton(){
         JButton playButton = (JButton) playbackBtns.getComponent(1);
         JButton pauseButton = (JButton) playbackBtns.getComponent(2);
 
@@ -185,7 +229,7 @@ public class MusicPlayerGUI extends JFrame {
     }
 
 //    adding under slider timing (00:00)
-    private void updatePlaybackSlider(Song song){
+    public void updatePlaybackSlider(Song song){
         playbackSlider.setMaximum(song.getMp3File().getFrameCount());
 
         Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
@@ -207,7 +251,7 @@ public class MusicPlayerGUI extends JFrame {
     }
 
 //   updating slider pointer ---▲--
-    private void setPlaybackSliderValue(int frame){
+void setPlaybackSliderValue(int frame){
         playbackSlider.setValue(frame);
     }
 
