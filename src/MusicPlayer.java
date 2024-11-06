@@ -11,9 +11,16 @@ public class MusicPlayer extends PlaybackListener {
     private MusicPlayerGUI musicPlayerGUI;
     private Song currentSong;
     private ArrayList<Song> playlist;
+    private int currentPlaylistIndex;
     private AdvancedPlayer advancedPlayer;
     private boolean isPaused;
+    private boolean songFinished;
+    private boolean pressedNext;
+    private boolean pressedPrev;
     private int currentFrame; //time when music is stopped
+    private int seconds =0;
+    private int minutes = 0;
+
 
 
     public void setCurrentFrame(int frame){
@@ -56,6 +63,36 @@ public class MusicPlayer extends PlaybackListener {
     }
 
 
+    public void nextSong(){
+        if(playlist==null)return;
+        if (currentPlaylistIndex+1 > playlist.size()-1)return;
+        if (!songFinished)stopSong();
+        pressedNext = true;
+        currentPlaylistIndex++;
+        currentSong  = playlist.get(currentPlaylistIndex);
+        currentFrame=0;
+        currentTimeInMilli=0;
+        musicPlayerGUI.enablePauseButtonDissablePlayButton();
+        musicPlayerGUI.updateSongTitleAndArtist(currentSong);
+        musicPlayerGUI.updatePlaybackSlider(currentSong);
+        playCurrentSong();
+    }
+    public void prevSong(){
+        if(playlist==null)return;
+        if (currentPlaylistIndex-1 < 0)return;
+
+        if (!songFinished)stopSong();
+        pressedPrev = true;
+        currentPlaylistIndex--;
+        currentSong  = playlist.get(currentPlaylistIndex);
+        currentFrame=0;
+        currentTimeInMilli=0;
+        musicPlayerGUI.enablePauseButtonDissablePlayButton();
+        musicPlayerGUI.updateSongTitleAndArtist(currentSong);
+        musicPlayerGUI.updatePlaybackSlider(currentSong);
+        playCurrentSong();
+    }
+
     private int currentTimeInMilli;
     public MusicPlayer(MusicPlayerGUI musicPlayerGUI){
         this.musicPlayerGUI = musicPlayerGUI;
@@ -64,7 +101,12 @@ public class MusicPlayer extends PlaybackListener {
     //  load song and insta play it
     public void loadSong(Song song){
         currentSong = song;
+        playlist = null;
+        if (!songFinished) stopSong();
         if(currentSong != null){
+            currentFrame = 0;
+            currentTimeInMilli =0;
+            musicPlayerGUI.setPlaybackSliderValue(0);
             playCurrentSong();
         }
     }
@@ -127,6 +169,7 @@ public class MusicPlayer extends PlaybackListener {
     }
 
     private void startPlaybackSliderTread(){
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -139,13 +182,24 @@ public class MusicPlayer extends PlaybackListener {
                         e.printStackTrace();
                     }
                 }
-                while (!isPaused){
+                while (!isPaused && !songFinished && !pressedNext && !pressedPrev){
                     try {
                         currentTimeInMilli++;
 //                        formula taken from stackoverflow
                         int calculatedFrame = (int)((double)currentTimeInMilli *2.08* currentSong.getFrameRatePerMillisecond());
 
                         musicPlayerGUI.setPlaybackSliderValue(calculatedFrame);
+
+                        if (currentTimeInMilli % 1000 == 0){
+                            seconds++;
+                            if (seconds == 60) {
+                                seconds = 0;
+                                minutes++;
+                            }
+                        }
+                        String newtime = String.format("%02d:%02d", minutes, seconds);
+                        System.out.println(currentTimeInMilli);
+                        musicPlayerGUI.setCurrentSongTime(newtime);
                         Thread.sleep(1);
                     }catch (Exception e){
                         e.printStackTrace();
@@ -158,14 +212,39 @@ public class MusicPlayer extends PlaybackListener {
     @Override
     public void playbackStarted(PlaybackEvent evt) {
         System.out.println("Starting music player");
+        songFinished = false;
     }
 
     @Override
     public void playbackFinished(PlaybackEvent evt) {
         System.out.println("stopped at @" + evt.getFrame());
-
-        currentFrame += (int) ((double) evt.getFrame() * currentSong.getFrameRatePerMillisecond()); //calculating current frame
+        if (isPaused) {
+            currentFrame += (int) ((double) evt.getFrame() * currentSong.getFrameRatePerMillisecond()); //calculating current frame
+        } else { //when song ends
+//            if pressed next. song is not finished. and other code nod needed to execute
+            if (pressedNext || pressedPrev)return;
+            songFinished = true;
+            if (playlist==null){
+                musicPlayerGUI.enablePlayButtonDissablePauseButton();
+            }else {
+                if (currentPlaylistIndex==playlist.size()-1){ //if last song in playlist
+                    musicPlayerGUI.enablePlayButtonDissablePauseButton();
+                }else { // if its not last song, play next
+                    nextSong();
+                }
+            }
+        }
     }
 
 
 }
+
+
+/*
+mm:ss
+long minutes = mp3File.getLengthInSeconds() / 60;
+long seconds = mp3File.getLengthInSeconds() % 60;
+seconds + 1
+if seconds == 60;
+m++; second =0;
+ */

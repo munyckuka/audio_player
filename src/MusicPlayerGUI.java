@@ -18,6 +18,7 @@ public class MusicPlayerGUI extends JFrame {
     private JLabel songTitle, songArtist;
     private JPanel playbackBtns;
     private JSlider playbackSlider;
+    private JLabel labelBeggining;
 
     public MusicPlayerGUI(){
         super("Music Player");
@@ -165,6 +166,12 @@ public class MusicPlayerGUI extends JFrame {
         JButton prevButton = new JButton(loadImage("src/assets/previous.png"));
         prevButton.setBorderPainted(false);
         prevButton.setBackground(null);
+        prevButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                musicPlayer.prevSong();
+            }
+        });
         playbackBtns.add(prevButton);
 
         JButton playButton = new JButton(loadImage("src/assets/play.png"));
@@ -195,6 +202,12 @@ public class MusicPlayerGUI extends JFrame {
         JButton nextButton = new JButton(loadImage("src/assets/next.png"));
         nextButton.setBorderPainted(false);
         nextButton.setBackground(null);
+        nextButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                musicPlayer.nextSong();
+            }
+        });
         playbackBtns.add(nextButton);
 
         add(playbackBtns);
@@ -217,7 +230,7 @@ public class MusicPlayerGUI extends JFrame {
         pauseButton.setVisible(true);
         pauseButton.setEnabled(true);
     }
-    private void enablePlayButtonDissablePauseButton(){
+    public void enablePlayButtonDissablePauseButton(){
         JButton playButton = (JButton) playbackBtns.getComponent(1);
         JButton pauseButton = (JButton) playbackBtns.getComponent(2);
 
@@ -234,7 +247,7 @@ public class MusicPlayerGUI extends JFrame {
 
         Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
 
-        JLabel labelBeggining = new JLabel("00:00");
+        labelBeggining = new JLabel("00:00");
         labelBeggining.setFont(new Font("Dialog", Font.BOLD, 10));
         labelBeggining.setForeground(TEXT_COLOR);
 
@@ -251,8 +264,11 @@ public class MusicPlayerGUI extends JFrame {
     }
 
 //   updating slider pointer ---▲--
-void setPlaybackSliderValue(int frame){
+    public void setPlaybackSliderValue(int frame){
         playbackSlider.setValue(frame);
+    }
+    public void setCurrentSongTime(String time){
+        labelBeggining.setText(time);
     }
 
 //    load image from path
